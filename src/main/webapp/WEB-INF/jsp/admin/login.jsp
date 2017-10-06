@@ -1,6 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : Oct 6, 2017, 6:31:36 PM
+    Document   : login
+    Created on : Oct 6, 2017, 6:49:51 PM
     Author     : cyclingbd007
 --%>
 
@@ -12,11 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello zubayer
-        
-        
-        
-        
-        </h1>
+        <h1>Hello login</h1>
     </body>
 </html>

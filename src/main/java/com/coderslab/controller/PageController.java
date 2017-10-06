@@ -17,4 +17,9 @@ public class PageController {
         return "contact";
     }
     
+    @RequestMapping("/live_class")
+    public String loadLiveClassPage(){
+        return "live_class";
+    }
+    
 }

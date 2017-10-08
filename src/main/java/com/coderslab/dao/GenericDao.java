@@ -22,28 +22,47 @@ public abstract class GenericDao<T, ID extends Serializable> {
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
+    
+    
+    //crud
+    //get all data
+    public List<T> getAllData(Class<T> c) {
+        return (List<T>) sessionFactory.getCurrentSession().createCriteria(c).list();
+    }
+    
+    //get data by id
+    public T findData(Class<T> c, ID id) throws Exception {
+        return (T) sessionFactory.getCurrentSession().get(c, id);
+    }
 
+    //save object data
     public boolean saveData(T obj) throws Exception {
         sessionFactory.getCurrentSession().save(obj);
         return true;
     }
 
+    //update object data
     public boolean updateData(T obj) throws Exception {
         sessionFactory.getCurrentSession().update(obj);
         return true;
     }
-    
-    public boolean deleteData(T obj) throws Exception{
+
+    //delete objact data
+    public boolean deleteData(T obj) throws Exception {
         sessionFactory.getCurrentSession().delete(obj);
         return true;
     }
-    
-    public T findData(Class c, ID id) throws Exception{
-        return (T) sessionFactory.getCurrentSession().get(c, id);
+
+    //merge object data
+    public boolean merge(T obj) throws Exception {
+        sessionFactory.getCurrentSession().merge(obj);
+        return true;
     }
-    
-    public List<T> getAllData(Class c){
-        return (List<T>) sessionFactory.getCurrentSession().createCriteria(c).list();
+
+    //save or update object data
+    public boolean saveOrUpdate(T obj) throws Exception {
+        sessionFactory.getCurrentSession().saveOrUpdate(obj);
+        return true;
     }
 
 }

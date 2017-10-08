@@ -47,10 +47,10 @@ public class UsersDao extends GenericDao<Users, Serializable> {
 
     @Override
     public boolean updateData(Users obj) throws Exception {
-        String hql = "update users set userName = :userName, role = :role where userId = :userId";
+        String hql = "update users set userName = :userName, roleId = :roleId where userId = :userId";
         Query query = sessionFactory.getCurrentSession().createSQLQuery(hql);
         query.setString("userName", obj.getUserName());
-        query.setString("role", obj.getRole());
+        query.setInteger("roleId", obj.getRoleId());
         query.setInteger("userId", obj.getUserId());
         query.executeUpdate();
         return true;

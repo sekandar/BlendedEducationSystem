@@ -1,7 +1,12 @@
 package com.coderslab.admincontroller;
 
+import com.coderslab.dao.UserRoleDao;
 import com.coderslab.dao.UsersDao;
+import com.coderslab.entity.UserRole;
 import com.coderslab.entity.Users;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +14,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,31 +27,42 @@ public class UsersController {
 
     @Autowired
     private UsersDao usersDao;
+    @Autowired
+    private UserRoleDao userRoleDao;
 
     @RequestMapping(value = "/add_user", method = RequestMethod.GET)
-    public String loadAddUserPage(HttpServletRequest request, Model model) {
-        model.addAttribute("users", new Users());
-        model.addAttribute("sm", request.getParameter("sm"));
-        model.addAttribute("em", request.getParameter("em"));
+    public String loadAddUserPage(HttpServletRequest request, ModelMap modelMap) {
+
+        modelMap.addAttribute("userRoles", userRoleDao.getAllUserRole());
+        modelMap.addAttribute("sm", request.getParameter("sm"));
+        modelMap.addAttribute("em", request.getParameter("em"));
         return "/admin/add_user";
     }
 
     @RequestMapping(value = "/list_user", method = RequestMethod.GET)
     public String loadListUserPage(Model model, Users users, HttpServletRequest request) {
         model.addAttribute("users", usersDao.getAllData(users));
+        model.addAttribute("userRoles", userRoleDao.getAllUserRole());
         model.addAttribute("sm", request.getParameter("sm"));
         model.addAttribute("em", request.getParameter("em"));
         return "/admin/list_user";
     }
 
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
-    public String saveUsers(@Valid Users users, Model model, BindingResult result) {
+    public String saveUsers(Model model, HttpServletRequest request, Users users) {
 
-        if(result.hasErrors()){
-            System.out.println("==========" + users.toString());
-            return "redirect:/admin/add_user";
+        if (users.getUserName().isEmpty()) {
+            model.addAttribute("em", "Please enter user name");
+        } else if (users.getEmail().isEmpty()) {
+            model.addAttribute("em", "Please enter valid email address");
+        } else if (users.getPassword().isEmpty()) {
+            model.addAttribute("em", "Please enter password");
+        } else if (users.getRoleId() == 0) {
+            model.addAttribute("em", "Please select User Role");
         }
-        
+
+        users.setRegisterDate(new Date());
+
         try {
             boolean status = usersDao.saveData(users);
             if (status) {
@@ -53,6 +71,27 @@ public class UsersController {
                 model.addAttribute("em", "User info not saved");
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return "redirect:/admin/add_user";
+    }
+
+    @RequestMapping(value = "/saveUserRole", method = RequestMethod.POST)
+    public String saveUserRole(Model model, @Valid UserRole userRole, BindingResult result) {
+
+        if (userRole.getRoleName().isEmpty()) {
+            model.addAttribute("em", "Please enter Role Name");
+            return "redirect:/admin/add_user";
+        }
+
+        try {
+            boolean status = userRoleDao.saveData(userRole);
+            if (status) {
+                model.addAttribute("sm", "User Role Create Successfully");
+            }
+        } catch (Exception ex) {
+            model.addAttribute("em", "User role Not Create");
             ex.printStackTrace();
         }
 
@@ -90,6 +129,7 @@ public class UsersController {
 
         try {
             model.addAttribute("user", usersDao.findData(id));
+            model.addAttribute("userRoles", userRoleDao.getAllUserRole());
         } catch (Exception ex) {
             Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -126,6 +166,19 @@ public class UsersController {
         } catch (Exception ex) {
             model.addAttribute("em", "User Info not deleted");
             Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return "redirect:/admin/list_user";
+    }
+
+    @RequestMapping(value = "/delete_user_role/{id}", method = RequestMethod.GET)
+    public String deleteUserRole(@PathVariable("id") int id, Model model) {
+        try {
+            userRoleDao.deleteRoleById(id);
+            model.addAttribute("sm", "Role Delete successfully");
+        } catch (Exception ex) {
+            model.addAttribute("em", "Role Not Delete");
+            ex.printStackTrace();
         }
 
         return "redirect:/admin/list_user";

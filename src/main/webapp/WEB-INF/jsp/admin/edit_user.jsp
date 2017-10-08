@@ -32,33 +32,38 @@
 
             <div class="col-md-12">
 
-                <form class="form-horizontal" action="${pageContext.request.contextPath}/admin/updateUser" method="post">
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="userName">User Name:</label>
-                        <div class="col-sm-10">
-                            <input value="${user.userId}" name="userId" type="hidden" class="form-control">
-                            <input value="${user.userName}" name="userName" type="text" class="form-control" id="userName" placeholder="Enter User Name">
-                        </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4>Edit User Info</h4>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="role">Role: </label>
-                        <div class="col-sm-10"> 
-                            <select name="role" class="form-control" id="role">
-                                <option value="0">--- Select Role ---</option>
-                                <option value="admin">Admin</option>
-                                <option value="student">Student</option>
-                                <option value="teacher">Teacher</option>
-                            </select>
-                        </div>
+                    <div class="panel-body">
+                        <form action="${pageContext.request.contextPath}/admin/updateUser" method="post" commandName="users">
+                            <div class="form-group">
+                                <label class="control-label" for="userName">User Name:</label>
+                                <input value="${user.userId}" name="userId" type="hidden" class="form-control"/>
+                                <input value="${user.userName}" name="userName" type="text" class="form-control" id="userName"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label" for="role">Role: </label>
+                                <select name="roleId" class="form-control" id="roleId">
+                                    <option value="0">--- Select Role ---</option>
+                                    <c:forEach var="row" items="${userRoles}">
+                                        <option value="${row.roleId}">${row.roleName}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group"> 
+                                <button type="submit" class="btn btn-success">Update</button>
+                                <button type="reset" class="btn btn-default">Reset</button>
+                                <a href="${pageContext.request.contextPath}/admin/list_user" class="btn btn-warning pull-right">List Page</a>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group"> 
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-success">Update</button>
-                            <button type="reset" class="btn btn-default">Reset</button>
-                            <a href="${pageContext.request.contextPath}/admin/list_user" class="btn btn-warning pull-right">Go back to User List</a>
-                        </div>
-                    </div>
-                </form>
+                    <div class="panel-footer"></div>
+                </div>
 
             </div>
 
@@ -72,7 +77,7 @@
 </div>
 
 <script type="text/javascript">
-    document.getElementById("role").value = ${user.role};
+    document.getElementById("roleId").value = ${user.roleId};
 </script>
 
 <%@include file="footer.jsp" %>

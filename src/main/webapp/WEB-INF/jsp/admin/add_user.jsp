@@ -1,5 +1,5 @@
+<%@page import="java.util.Date"%>
 <%@include file="header.jsp" %>
-
 <div id="page-wrapper" style="min-height: 800px;">
     <div class="container-fluid">
         <!-- Page Heading -->
@@ -14,71 +14,90 @@
         <div class="row">
             <div class="col-md-12">
                 <c:if test="${sm != null}">
-                <div class="alert alert-success alert-dismissable">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success!</strong> ${sm}
-                </div>
+                    <div class="alert alert-success alert-dismissable">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Success!</strong> ${sm}
+                    </div>
                 </c:if>
                 <c:if test="${em != null}">
-                <div class="alert alert-danger alert-dismissable">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error!</strong> ${em}
-                </div>
+                    <div class="alert alert-danger alert-dismissable">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Error!</strong> ${em}
+                    </div>
                 </c:if>
             </div>
         </div>
 
         <div class="row">
-
-            <div class="col-md-12">
-
-                <form class="form-horizontal" action="${pageContext.request.contextPath}/admin/saveUser" method="post">
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="userName">User Name:</label>
-                        <div class="col-sm-10">
-                            <input name="userName" type="text" class="form-control" id="userName" placeholder="Enter User Name">
-                        </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Create User Role</h4>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="email">Email:</label>
-                        <div class="col-sm-10"> 
-                            <input name="email" type="email" class="form-control" id="email" placeholder="Enter Email">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="pwd">Password:</label>
-                        <div class="col-sm-10"> 
-                            <input name="password" type="password" class="form-control" id="pwd" placeholder="Enter password">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="pwd">Role: </label>
-                        <div class="col-sm-10"> 
-                            <select name="role" class="form-control">
-                                <option value="0">--- select role ---</option>
-                                <option value="admin">Admin</option>
-                                <option value="student">Student</option>
-                                <option value="teacher">Teacher</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group"> 
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="checkbox">
-                                <label><input type="checkbox" name="status"> Active</label>
+                    <div class="panel-body">
+                        <form action="${pageContext.request.contextPath}/admin/saveUserRole" method="post">
+                            <div class="form-group">
+                                <label class="control-label" for="roleName">Role Name:</label>
+                                <input  name="roleName" type="text" class="form-control" id="roleName" placeholder="Enter Role Name"/>
                             </div>
-                        </div>
+                            <div class="form-group"> 
+                                <button type="submit" class="btn btn-success">Create</button>
+                                <button type="reset" class="btn btn-default">Reset</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group"> 
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-success">Create</button>
-                            <button type="reset" class="btn btn-default">Reset</button>
-                        </div>
-                    </div>
-                </form>
-
+                    <div class="panel-footer"></div>
+                </div>
             </div>
+
+            <div class="col-md-8 pull-right">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>Create User</h4>
+                    </div>
+                    <div class="panel-body">
+                        
+                        <form action="${pageContext.request.contextPath}/admin/saveUser" method="post" commandName="users">
+                            <div class="form-group">
+                                <label class="control-label" for="userName">User Name:</label>
+                                <input name="userName" type="text" class="form-control" id="userName" placeholder="Enter User Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="email">Email:</label>
+                                <input name="email" type="email" class="form-control" id="email" placeholder="Enter Email">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="pwd">Password:</label>
+                                <input name="password" type="password" class="form-control" id="pwd" placeholder="Enter password">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="role">Role: </label>
+                               
+                                <select name="roleId" class="form-control">
+                                    <option value="0">--- Select Role ---</option>
+                                    <c:forEach var="row" items="${userRoles}">
+                                        <option value="${row.roleId}">${row.roleName}</option>
+                                    </c:forEach>
+                                </select>
+                                
+                            </div>
+                            
+                            <div class="form-group"> 
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="status"> Active</label>
+                                </div>
+                            </div>
+                            <div class="form-group"> 
+                                <button type="submit" class="btn btn-success">Create</button>
+                                <button type="reset" class="btn btn-default">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+            </div>
+
+
 
         </div>
 

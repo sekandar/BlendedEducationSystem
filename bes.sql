@@ -56,10 +56,10 @@ CREATE TABLE `course` (
   `courseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `courseName` varchar(100) NOT NULL,
   `courseCode` varchar(45) NOT NULL,
-  `description` text NOT NULL,
+  `description` text,
   `status` tinyint(1) NOT NULL,
-  `courseDuration` int(10) unsigned NOT NULL,
-  `courseBook` varchar(255) NOT NULL,
+  `courseDuration` int(10) unsigned DEFAULT NULL,
+  `courseBook` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`courseId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -79,12 +79,12 @@ DROP TABLE IF EXISTS `lesson`;
 CREATE TABLE `lesson` (
   `lessonId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lessonTitle` varchar(255) NOT NULL,
-  `lessonDuration` int(10) unsigned NOT NULL,
-  `description` text NOT NULL,
+  `lessonDuration` int(10) unsigned DEFAULT NULL,
+  `description` text,
   `status` tinyint(1) NOT NULL,
   `courseId` int(10) unsigned NOT NULL,
-  `presentationFile` varchar(255) NOT NULL,
-  `notesFile` varchar(255) NOT NULL,
+  `presentationFile` varchar(255) DEFAULT NULL,
+  `notesFile` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`lessonId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -128,8 +128,8 @@ DROP TABLE IF EXISTS `room`;
 CREATE TABLE `room` (
   `roomId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `roomType` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `seatCapacity` int(10) unsigned NOT NULL,
+  `description` text,
+  `seatCapacity` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`roomId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -174,13 +174,17 @@ CREATE TABLE `user_role` (
   `roleId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `roleName` varchar(45) NOT NULL,
   PRIMARY KEY (`roleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user_role`
 --
 
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
+INSERT INTO `user_role` (`roleId`,`roleName`) VALUES 
+ (1,'admin'),
+ (2,'teacher'),
+ (3,'student');
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 
 
@@ -190,19 +194,19 @@ CREATE TABLE `user_role` (
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `userId` int(10) unsigned NOT NULL,
+  `userId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `userName` varchar(45) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(45) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `photo` varchar(225) DEFAULT NULL,
-  `firstName` varchar(50) NOT NULL,
-  `lastName` varchar(50) NOT NULL,
+  `firstName` varchar(50) DEFAULT NULL,
+  `lastName` varchar(50) DEFAULT NULL,
   `roleId` int(10) unsigned NOT NULL,
   `registerDate` date NOT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
@@ -210,9 +214,8 @@ CREATE TABLE `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`userId`,`userName`,`email`,`password`,`status`,`photo`,`firstName`,`lastName`,`roleId`,`registerDate`) VALUES 
- (1,'zubayer','zubayer@gmail.com','1234',0,'','','',0,'0000-00-00'),
- (2,'admin','admin@gmail.com','1234',1,'','','',0,'0000-00-00'),
- (3,'uzzol','uzzol@gmail.com','1234',1,'','','',0,'0000-00-00');
+ (1,'admin','admin@gmail.com','1234',1,NULL,NULL,NULL,1,'2017-10-08'),
+ (2,'bithy','bithy@gmail.com','1234',0,NULL,NULL,NULL,3,'2017-10-08');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 
